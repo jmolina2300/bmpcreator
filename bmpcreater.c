@@ -14,6 +14,10 @@
 #include <stdint.h>
 #include <ctype.h>
 
+#define SIZE_BMP_HEADER 14
+#define SIZE_DIB_HEADER 40
+#define SIZE_PIXEL 3
+
 
 
 // BMP header structure
@@ -82,15 +86,15 @@ void bmp_create_header(BmpImage *image, int width, int height, int bits)
   image->header.signature[1] = 'M';
   image->header.reserved1 = 0;
   image->header.reserved2 = 0;
-  image->header.offset = sizeof(BmpFileHeader) + sizeof(DibHeader);
+  image->header.offset = SIZE_BMP_HEADER + SIZE_DIB_HEADER;
 
-  image->info.size = sizeof(BmpFileHeader);
+  image->info.size = SIZE_DIB_HEADER;
   image->info.width = width;
   image->info.height = height;
-  image->info.planes = 0x0100;
+  image->info.planes = 1;
   image->info.bits = 24;
   image->info.compression = 0;
-  image->info.imagesize = (width * height) * sizeof(Pixel);
+  image->info.imagesize = (width * height) * SIZE_PIXEL;
   image->info.xresolution = 0;
   image->info.yresolution = 0;
   image->info.ncolors = 0;
@@ -174,7 +178,7 @@ int main(int argc, char * argv[])
   
   // Create an array of pixels the same size as the image
   size_t numPixels = image.info.width * image.info.height;
-  Pixel *pixelArray = malloc(sizeof(Pixel) * numPixels);
+  Pixel *pixelArray = malloc(SIZE_PIXEL * numPixels);
   if (pixelArray == NULL) {
     printf("Error: could not allocate memory for pixel array\n");
     return 1;
@@ -187,7 +191,7 @@ int main(int argc, char * argv[])
   }
 
   // Write the pixel array
-  fwrite(pixelArray, sizeof(Pixel), numPixels, file);
+  fwrite(pixelArray, SIZE_PIXEL, numPixels, file);
   free(pixelArray);
 
   fclose(file);
