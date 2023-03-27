@@ -46,6 +46,7 @@ typedef struct {
   BmpFileHeader  header;
   DibHeader      info;
   Pixel         *data;
+  uint8_t       *data_raw;
 }  BmpImage;
 
 
@@ -54,8 +55,10 @@ void bmp_create_header(BmpImage *image, int width, int height, int bits);
 int bmp_create_canvas(BmpImage *image, uint32_t color);
 
 int bmp_write_to_file(BmpImage *image, const char *filename);
+int bmp_write_to_file_raw(BmpImage *image, const char *filename);
 
 int bmp_read_from_file(BmpImage *image, const char *filename);
+int bmp_read_from_file_raw(BmpImage *image, const char *filename);
 
 void bmp_destroy_image(BmpImage *image);
 
